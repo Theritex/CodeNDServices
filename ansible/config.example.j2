@@ -1,0 +1,30 @@
+# Este es un ejemplo básico de plantilla Jinja2
+
+# Uso de una variable
+variable: {{ variable_name }}
+
+# Uso de un condicional
+{% if condition %}
+  Resultado si la condición es verdadera.
+{% else %}
+  Resultado si la condición es falsa.
+{% endif %}
+
+# Uso de un bucle
+{% for item in list %}
+  Elemento: {{ item }}
+{% endfor %}
+
+# Comentario Jinja2
+{# Esto es un comentario en Jinja2, no aparecerá en el archivo final #}
+
+# Ejemplo de filtro de Jinja2
+{{ value | upper }}  # Convierte "value" a mayúsculas.
+
+# Uso de una variable por defecto si no está definida
+valor: {{ variable_name | default('valor por defecto') }}
+
+# Uso de un bloque raw para evitar la interpretación de Jinja2
+{% raw %}
+Este texto no será interpretado como Jinja2.
+{% endraw %}
