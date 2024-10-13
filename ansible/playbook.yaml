@@ -1,0 +1,28 @@
+- name: Escribir nombre de playbook
+  hosts: Nombre_Grupo_Servidores_Asignados
+  become: yes # Con esta puedes acceder a root
+  tasks:
+    - name: Nombre de Tarea
+      apt: # Usas apt para instalar lo siguiente
+        name: git # instalar el paquete git
+        state: present # aseguramos que lo has descargado correctamente
+
+    - name: Obtener el directorio del usuario actual
+      ansible.builtin.set_fact:
+        user_home: "{{ ansible_env.HOME }}"
+
+    - name: Clonar el repositorio SSP
+      git:
+        repo: https://github.com/Nisamov/ssp
+        dest: "{{ user_home }}/ssp"
+        update: yes
+
+    - name: Ejecutar comandos dentro del repositorio clonado
+      command: ./install.sh
+      args:
+        chdir: "{{ user_home }}/ssp"
+
+    - name: Ejecutar un segundo comando
+      command: echo "Comando ejecutado"
+      args:
+        chdir: "{{ user_home }}/ssp"
