@@ -2,13 +2,13 @@
 
 Semaphore es una interfaz web de código abierto que permite la gestion de Ansible de manera sencilla e intuitiva, por lo que es bastante conveniente su uso.
 
-Semaphore requiere de docker para funcionar, se recomienda revisar la [documentación](../../Docker/Documentacion.md).
+Es posible instalar Semaphore de múltiples maneras, la que se usará en este ejemplo es la vista en [esta página](https://docs.semaphoreui.com/administration-guide/installation/#package-manager).
 
 ### Instalación:
 Usamos el siguiente comando para obtener el `.deb` del repositorio en GitHub:
 ```sh
 wget https://github.com/ansible-semaphore/semaphore/releases/\
-download/v2.8.75/semaphore_2.8.75_linux_amd64.deb
+download/v2.10.22/semaphore_2.10.22_linux_amd64.deb
 ```
 Para instalar el paquete `.deb`, usamos el siguiente comando:
 ```sh
@@ -18,44 +18,6 @@ Podemos ejecutar el instalador con:
 ```sh
 semaphore setup
 ```
-Para usar semahore, podemos usar:
-```sh
-semaphore service --config=./config.json
-```
-Configuración inicial para el uso de docker compose, puede ser necesario clonar el repositorio y bajar el docker:
-```sh
-git clone https://github.com/ansible-semaphore/semaphore.git
-```
-Dentro del repositorio clonado (en mi caso), creamos un directorio y creamos un fichero dentro con el siguiente contenido:
-```sh
-cd semaphore
-mkdir docker-semaphore
-```
-Ceamos un fichero con el que montaremos el docker::
-```sh
-sudo nano docker-compose.yml
-```
-Dentro del fichero `.yml` ingresaremos el siguiente código:
-```yml
-version: "3"
-services:
- semaphore:
-  image: semaphoreui/semaphore:latest
-   container_name: semaphore
-    ports:
-     - "3000:3000"
-    environment:
-     - SEMAPHORE_DB=bolt
-    volumes:
-     - semaphore_data:/data
-volumes:
- semaphore_data:
-```
-Iniciar semaphore con docker compose:
-```sh
-docker-compose up -d
-```
-
 ### Accediendo a la interfaz de Semaphore Web
 Por defecto, semaphore se ejecuta en el puerto `3000`, por lo ne necesitamos habilitar ese puerto mismo para poder acceder.
 ```sh
