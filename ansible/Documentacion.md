@@ -105,3 +105,8 @@ range_end: 192.168.1.200
 gateway: 192.168.1.1
 dns: 8.8.8.8
 ```
+
+### Página Externas
+Si esta información no es suficiente, se recomienda visitar las siguientes páginas:
+- [Red hat Ansible](https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.0-ea/html-single/ansible_navigator_creator_guide/index#proc-browse-collections-tui_browse-collections-navigator)
+- [Ansible Ualmtorres Github.io](https://ualmtorres.github.io/CursoAnsible/tutorial/)

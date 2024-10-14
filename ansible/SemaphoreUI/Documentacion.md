@@ -26,3 +26,8 @@ Por defecto, semaphore se ejecuta en el puerto `3000`, por lo ne necesitamos hab
 ```sh
 http://localhost:3000/ or http://Your-IP-Address:3000
 ```
+
+### Páginas Externas
+Si esta información no es suficiente, se recomienda visitar la siguiente página:
+- [Semaphore Docs](https://docs.semaphoreui.com/administration-guide/installation/#package-manager)
+- [Semaphore Devopstricks](https://www.devopstricks.in/installing-semaphore-web-ui-for-ansible-on-ubuntu-22-04-lts/#:~:text=Installing%20Semaphore%20Web%20UI%20for%20Ansible%20on%20Ubuntu,5%20Step%205%3A%20Accessing%20Semaphore%20Web%20UI%20)
