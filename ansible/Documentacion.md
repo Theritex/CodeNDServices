@@ -3,6 +3,8 @@
 Ansible usa contenedor de imagenes conocidas como Execution Enviroments (EE) que actuan como nodos de control.
 EE eliminan complejidad a la hora de escalar proyectos automatizados y hacer las cosas como operaciones de ejecucion mucho mas simples.
 
+Se recomienda leer la [documentación](../mysql/Documentacion.md) de mysql para poder trabajar Ansible con bases de datos en MariaDB.
+
 ### Instalación
 
 Establecer un ambiente de trabajo:
