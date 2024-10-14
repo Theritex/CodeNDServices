@@ -18,6 +18,19 @@ Podemos ejecutar el instalador con:
 ```sh
 semaphore setup
 ```
+Durante la instalación, el equipo solicitará los siguientes datos:
+```sh
+sudo semaphore setup \
+    --host 127.0.0.1 \
+    --port 3000 \
+    --user root \
+    --pass 'yourpassword' \
+    --name semaphore \
+    --admin admin \
+    --email admin@example.com \
+    --admin-password 'password'
+```
+
 ### Accediendo a la interfaz de Semaphore Web
 Por defecto, semaphore se ejecuta en el puerto `3000`, por lo ne necesitamos habilitar ese puerto mismo para poder acceder.
 ```sh
