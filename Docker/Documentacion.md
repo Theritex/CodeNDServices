@@ -2,8 +2,8 @@
 
 Docker es una plataforma de código abierto que facilita el desarrollo, implementación y ejecución de aplicaciones mediante el uso de contenedores. Los contenedores son entornos ligeros y portátiles que permiten empaquetar una aplicación junto con todas sus dependencias, como bibliotecas, configuraciones y archivos necesarios para ejecutarse de manera consistente en diferentes entornos.
 
-Características principales de Docker:
-Contenedores:
+### Características principales de Docker:
+#### Contenedores:
 
 Un contenedor es una unidad de software que contiene todo lo necesario para que una aplicación funcione: código, runtime, bibliotecas, y configuraciones del sistema.
 A diferencia de las máquinas virtuales (VMs), los contenedores comparten el mismo kernel del sistema operativo anfitrión, lo que los hace mucho más ligeros y eficientes. Esto reduce el uso de recursos y acelera su ejecución y escalabilidad.
@@ -22,7 +22,7 @@ Dockerfile:
 
 Un Dockerfile es un archivo de texto que contiene una serie de instrucciones que Docker utiliza para construir una imagen. En él se definen las acciones, como qué base de sistema operativo utilizar, qué dependencias instalar, cómo configurar el entorno, y qué comandos ejecutar cuando se inicie el contenedor.
 
-Gestión eficiente de recursos:
+#### Gestión eficiente de recursos:
 
 Docker utiliza recursos de manera más eficiente que las máquinas virtuales. Como los contenedores comparten el mismo núcleo del sistema operativo, los contenedores ocupan menos espacio y se ejecutan más rápido.
 Despliegue de aplicaciones:
@@ -37,3 +37,40 @@ Máquinas virtuales: Ejecutan un sistema operativo completo, junto con aplicacio
 
 Docker: Ejecuta contenedores que comparten el mismo kernel del sistema operativo del host, lo que permite crear entornos aislados de manera más ligera y eficiente.
 
+### Instalación
+Actualizar paquetes del sistema:
+```sh
+sudo apt update && sudo apt upgrade -y
+```
+Instalar dependencias necesarias:
+```sh
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
+```
+Agregar clave GPG para verificar paquetes:
+```sh
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+```
+Añadir repositorio ofical de docker:
+```sh
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+Actualizar paquetes para que se reconozca el repositorio de docker:
+```sh
+sudo apt update
+```
+Instalar docer:
+```sh
+sudo apt install docker-ce docker-ce-cli containerd.io
+```
+Verificación de la instalación:
+```sh
+sudo systemctl status docker
+```
+Añadir tu usuario al grupo docker (opcional):
+```sh
+sudo usermod -aG docker $USER
+```
+Probar docker:
+```sh
+docker run hello-world
+```

@@ -2,6 +2,8 @@
 
 Semaphore es una interfaz web de código abierto que permite la gestion de Ansible de manera sencilla e intuitiva, por lo que es bastante conveniente su uso.
 
+Semaphore requiere de docker para funcionar, se recomienda revisar la [documentación](../../Docker/Documentacion.md).
+
 ### Instalación:
 Usamos el siguiente comando para obtener el `.deb` del repositorio en GitHub:
 ```sh
@@ -19,6 +21,39 @@ semaphore setup
 Para usar semahore, podemos usar:
 ```sh
 semaphore service --config=./config.json
+```
+Configuración inicial para el uso de docker compose, puede ser necesario clonar el repositorio y bajar el docker:
+```sh
+git clone https://github.com/ansible-semaphore/semaphore.git
+```
+Dentro del repositorio clonado (en mi caso), creamos un directorio y creamos un fichero dentro con el siguiente contenido:
+```sh
+cd semaphore
+mkdir docker-semaphore
+```
+Ceamos un fichero con el que montaremos el docker::
+```sh
+sudo nano docker-compose.yml
+```
+Dentro del fichero `.yml` ingresaremos el siguiente código:
+```yml
+version: "3"
+services:
+ semaphore:
+  image: semaphoreui/semaphore:latest
+   container_name: semaphore
+    ports:
+     - "3000:3000"
+    environment:
+     - SEMAPHORE_DB=bolt
+    volumes:
+     - semaphore_data:/data
+volumes:
+ semaphore_data:
+```
+Iniciar semaphore con docker compose:
+```sh
+docker-compose up -d
 ```
 
 ### Accediendo a la interfaz de Semaphore Web
