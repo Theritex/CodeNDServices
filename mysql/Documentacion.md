@@ -48,6 +48,10 @@ Si queremos otorgar todos los privilegios posibles sobre la base de datos creada
 ```sql
 GRANT ALL PRIVILEGES ON `bddname`.* TO 'usuario'@localhost;
 ```
+Mostrar qué privilegios tiene el usuario semaphore_user en las diferentes tablas de las bases de datos.
+```sql
+SELECT GRANTEE, TABLE_SCHEMA, TABLE_NAME, PRIVILEGE_TYPE FROM information_schema.table_privileges WHERE GRANTEE = "'semaphore_user'@'%'";
+```
 Para actualizar los privilegios y que surgan efecto, usamos el siguiente comando:
 ```sql
 FLUSH PRIVILEGES;
