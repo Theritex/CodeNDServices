@@ -9,7 +9,7 @@ sudo apt update
 ### Instalación Servidor MariaDB
 Para instalar MariaDB en Ubuntu, es necesario ejecutar los siguiente comandos:
 ```sh
-sudo apt install mariadb-server -y
+sudo apt install mariadb-server mariadb-client -y
 ```
 Para comprobar el estado del servicio de MariaDB:
 ```sh
