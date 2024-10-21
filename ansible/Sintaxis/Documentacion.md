@@ -567,8 +567,100 @@ usuarioCompartido=usuarioComun
 </details>
 
 <details>
-    <summary>Gestión de Secretos</summary>
+    <summary>Gestión de Claves</summary>
 
-### Gestión de Secretos:
+### Gestión de Claves:
 
+Puede darse el caso en el que necesitemos gestionar claves o datos importantes para configurar determiados hosts, por lo que pare evitar arriesgar la información que generalmente se encuentra almacenada como texto sin formato, Ansible cuenta con una herramienta para cifrar y descifra cualquier archivo de datos.
+
+Se trata de Vault, una herramienta que viene con Ansible, puede ser ejecutada con el comando `ansible-vault`, lo que nos permtirá crear, editar, cifrar, descifrar  y ver archivos.
+
+> **Creación de cifrado**: Para crear un cifrado, usaremos el comando `ansible-vault create <nombre fichero>` de la siguiente forma:
+```sh
+ansible-vault create ficherocifrado1
+```
+Si es la primera vez que se usa vault, este solicitará una clave de acceso con la que podremos usar vault posteriormente de la siguiente forma:
+```sh
+ansible-vault create ficherocifrado1
+New Vault password: clavedeacceso
+Confirm New Vault password: clavedeacceso
+```
+Si no se quiere usar los métodos tradicionales, Ansible permite pasarle a Vault la clave por medio de un fichero de la siguiente manera:
+```sh
+# Comando a pasar
+ansible-vault create --vault-password-file=vault-pass misecreto.yml
+```
+```yml
+# Interior de misecreto.yml
+clavedeacceso
+```
+El codigo para proteger archivos es AES256 en las versiones más recientes de Ansible, no obstante las versiones previas podían llegar a usar AES de 128 bits.
+> **Ver contenido de archivo cifrado**: Para ver el contenido de un archivo protegido, usamos `ansible-vault view <fichero>`.
+```sh
+# Abrir archivo protegido
+ansible-vault view misecreto.yaml
+Vault password: clavedeacceso
+misecreto: "clavedeacceso"
+``` 
+> **Edición de arhivo cifrado existente**: Para editar un archivo cifrado existente, usamos el comando `ansible-vault edit <archivo>`.
+```sh
+ansible-vault edit misecreto.yml
+Vault password: clavedeacceso
+```
+> **Cifrar un archivo existente**: Cifrar un archivo existente, usamos el comando `ansible-vault encrypt <archivo>`, esta acción solicitará una nueva clave de acceso ya que se está cifrando nuevamente el fichero con una nueva clave de acceso (No se cifra dos veces como capas (layers)).
+```sh
+# Ciframos dos ficheros
+ansible-vault encrypt misecreto.yml ficheroacifrar.yml
+# Creamos una nueva clave de acceso
+New Vault Password: clavedeacceso2
+Confirm New Vault password: clavedeacceso2
+Encryption successful
+```
+> **Descifrar un archivo existente**: Para descifrar un archivo de forma permanente, usamos el comando `ansible-vault decrypt <archivo>` con la opción `--output` podemos guardar el archivo descifrado con un nombre diferente.
+```sh
+ansible-vault decrypt misecreto.yml --output=misecretodesencriptado.yml
+Vault password: clavedeacceso2
+Decryption successful
+```
+> **Camiar clave de acceso de un archivo cifrado**: Para cambiar la clave de acceso en un archivo cifrado, usamos el comando `ànsible-vualt rekey <archivo>`, este comando permite el cambio de varios archivos al mismo tiempo.
+```sh
+ansible-vault rekey misecreto.yml midocumento.yml documento2.yml
+Vault password: clavedeacceso2
+Confirm New Vault password: clavedeacceso2
+Rekey successful
+```
+Para pasar una clave por ficheros usamos el siguiente comando lineal:
+```sh
+ansible-vault rekey \
+--new-vault-password-file=NuevaClaveDeAcceso misecreto.yml midocumento.yml documento2.yml
+```
 </details>
+
+<details>
+    <summary>Claves de Acceso con Playbooks</summary>
+
+### Claves de Acceso con Playbooks:
+
+> **Acceso a un archivo cifrado desde un Playbook**: Para poder acceder a un archivo cifrado, es necesario proporcionar la clave de acceso al comando `ansible-navigator`.
+
+[CONSEJO] Para obtener más informacion sobre Ansible Navigator, puedes ir a la documentación compartida por Andrés Ruslan Abadías Otal, haciendo clic [aquí](https://github.com/Theritex/CodeNDServices/tree/main/ansible/Ansible-Navigator).
+```diff
+ansible-navigator run -m studut misecreto.yml
+- ERROR! Attempting to decrypt but no vault secrets found
+```
+Para poder proporcionarle la clave a una Playbook contamos con tres opciones diferentes:
+- Indicar de forma interactiva
+```sh
+ansible-navigator run -m stdout \
+#Deshabilitamos los artefactos para ingresar la clave de Vault
+--playbook-artifact-enable false \ # Los artefactos del playbook están deshabilitados de forma predeterminada
+# Podemos volver a habilitar los artefactos con el siguiente comando: ansible-navigatoe --playbook-artifact-enable true
+playbook.yml --vault-id @prompt
+Vault password (default): clavedeacceso2
+```
+- Especificar el archivo de clave Vault con `--vault-password-file`
+```sh
+ansible-navigator run -m stdout playbook.yml \ # Indicamos el playbook que queremos que tenga acceso
+--vault-password-file=/ruta/al/fichero.yml # Indicamos la ruta al fichero que alberga la clave
+```
+- Usar la variable de entorno `ANSIBLE_VAULT_PASSWORD_FILE`
