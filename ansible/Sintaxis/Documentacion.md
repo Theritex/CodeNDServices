@@ -106,27 +106,6 @@ become_method = sudo     # Metodo de escalado
 become_user = root       # Usuario de escalado
 become_ask_pass = false  # Solicitar clave de acceso al escalar
 ```
-Los ficheros de configuración permiten el uso de comentarios dentro de ellos, esto puede lograrse mediante dos diferentes maneras:
-- El uso de "#" (Almohadilla), de manera similar a Bash.
-- El uso de ";" (Punto y Coma), este método al igual que la almohadilla, permite comentar toda la linea
-
-Un ejemplo de uso práctico puede ser el siguiente:
-```cfg
-[defaults]
-# Ruta de inventario
-inventory = /home/usuarioejemplo/inventario # Ruta establecida: /home/usuarioejemplo/inventario
-remote_user = usuario1 # Usuarios disponibles "usuario1", "usuario5" y "neousuario"
-ask_pass = true
-
-[escalado_de_privilegios]
-become = false
-become_method = sudo
-become_user = root
-become_ask_pass = true
-
-; [ejemplo]
-; inventory = sin/declarar
-```
 </details>
 
 <details>
@@ -406,4 +385,190 @@ tasks:
   ansible.builtin.command:
     cmd: whoami
 ```
+</details>
+
+<details>
+    <summary>Implementación de Plays Indefinidos</summary>
+
+### Implementación de Plays Indefinidos:
+
+es posible implementar diferentes plays en un solo playbook, lo que permite ejeuctar muchas tareas en diferentes hosts, los plays se escriben como un item más de la lista, de la siguiente forma:
+```yml
+---
+- name: Instalar y habilitar Nginx en los servidores web
+  hosts: webservers
+  become: true
+  tasks:
+    - name: Instalar Nginx
+      ansible.builtin.yum:
+        name: nginx
+        state: present
+
+    - name: Iniciar y habilitar Nginx
+      ansible.builtin.systemd:
+        name: nginx
+        state: started
+        enabled: true
+
+- name: Ejecutar un comando Bash en los servidores de base de datos
+  hosts: dbservers
+  become: true
+  tasks:
+    - name: Crear un archivo usando Bash
+      ansible.builtin.shell: |
+        echo "Este es un archivo de prueba" > /tmp/archivo_prueba.txt
+...
+```
+</details>
+
+<details>
+    <summary>Sintaxis Playbook Ansible</summary>
+
+### Sintaxis Playbook Ansible:
+
+> **Comentarios**: Los playbooks permiten el uso de comentarios dentro de ellos, esto puede lograrse mediante dos diferentes maneras:
+- El uso de "#" (Almohadilla), de manera similar a Bash.
+    - `# Esto es un comentario`
+    - `Contenido sin comentario # Contenido comentado`
+- El uso de ";" (Punto y Coma), este método al igual que la almohadilla, permite comentar toda la linea.
+> **Cadenas de texto (Strings)**:  Generalmente no es necesario colocar comillas para las cadenas de texto, se pueden incluir entre comillas dobles o simples.
+- Ejemplo sin comillas:
+    - `Esto es una cadena de texto`
+- Ejemplo comillas simples:
+    - `'Esto es una cadena de texto'`
+- Ejemplo comillas dobles:
+    - `"Esto es una cadena de texto"`
+Es posbl escribir cadenas de varias lineas gracias a la barra vertical ["|"] (pipe), de la siguiente froma, podemos incluir más carácteres:
+```yml
+include_newlines: |
+    Ejemplo linea 1
+    Ejemplo linea 2
+    Ejemplo linea 3
+```
+No solo usando la barra vertical podemos realizar esto, con el carácter mayor ">", podemos indicar que los caracteres de nueva linea han de ser convertidos en espacios y se deben quitar espacios en blanco dentro de las lineas.
+
+Este método suele usarse para convertir largas cadenas en carácteres, pudiendo abarcar múltiples lineas.
+```yml
+fold_newlines: >
+    Ejemplo linea 1
+    Ejemplo linea 2
+    Ejemplo linea 3
+```
+> **Diccionarios**: Un diccionario permite almacenar informacion en formato de lista , de donde posteriormente se podrán sacar los datos.
+
+Un ejemplo de diccionario es el siguiente:
+```yml
+# Primer formato de escritura - sencillo y facil para humanos
+name: ejemplo
+example: example2
+example3: example4
+```
+```yml
+# Segundo formato de escritura horizontal - dificil para humanos
+{name: ejemplo, example: example2, example3: example4}
+```
+> **Listas**: Las listas de la misma forma que los diccionarios cuentan con una estructura similar, con algunos cambios.
+
+```yml
+# Primer formato de escritura - sencillo y facil para humanos
+ejemplo:
+    - ejemplo1
+    - ejemplo2
+    - ejemplo3
+```
+```yml
+#Segundo formato de escritura horizontal - dificil para humanos
+ejemplo: [ejemplo1, ejemplo2, ejemplo3]
+```
+</details>
+
+<details>
+    <summary>Gestión de Variables y Datos</summary>
+
+### Gestión de Variables y Datos:
+
+Las variables permiten almacenar parámetros para llamarlos de manera indefinida, ahorrando tiempo y sencillez a la hora de crear código.
+
+Las variables son una gran herramienta para cualquier lenguaje de programación.
+
+Las variables pueden almacenar diferente contenido, un ejemplo de los posibles valores a almacenar son los siguientes:
+- Usuarios (Usuarios a gestionar)
+- Paquetes (Paquetes a instalar/desinstalar)
+- Servicios (Servicios que iniciar o detener)
+- Archivos (Archivos que crear, eliminar, mover...)
+- Direcciones (IP/DNS) (Direcciones a conectarse)
+
+Para declarar variables hay que tener en cuenta su estrcutura, estas no pueden contener espacios dentro de ellas, ni carácteres no permitidos.
+
+| Nombres No Válidos   | Nombres Válidos     |
+|----------------------|---------------------|
+| ejemplo inicio       | ejemplo_inicio      |
+| ejemplo.punto        | ejemplo_punto       |
+| 1er fichero          | fichero_01          |
+| ejemplo$1            | ejemplo_1
+
+> **Definición de Variable en Playbook**: Podemos definir variables dentro de playbooks de diferentes maneras, las cuales son las siguientes.
+
+- Bloque `vars` a comienzo de un play:
+```yml
+# Interior de playbook
+- hosts: all
+  vars:
+    user: usuario       # Hemos declarado la variable "user" con el valor "usuario"
+    home: /home/usuario # Hemos declarado la variable "home" con el valor "/home/usuario"
+```
+- Podemos definir vairables de archivos exernos para no usar el bloque `vars`.
+```yml
+# Interior de playbook
+- hosts: all
+  vars_files:
+    - vars/users.yml    # Las variables se encuentran en el fichero de la ruta "vars/users.yml"
+```
+```yml
+# Interior de users.yml
+user: usuario
+home: /home/usuario
+```
+> **Referencia a Variable**: Tras haber declarado las variables, se llaman a estas mismas (haciendo referencia), mediante el uso de llaves dobles "`{{ }}`", lo que permite que Ansible reemplace la variable con su valor original al ejecutar la tarea.
+
+```yml
+vars:
+    user: ejemploUsuario
+
+tasks:
+    # Esta linea será leida como "Crea el usuario ejemploUsuario"
+    - name: Crea el usuario {{ user }}
+      user:
+        # Con esta declaración, creamos el usuario "ejemploUsuario"
+        name: "{{ user }}"
+```
+Cuando se usa una variable como el primer elemento para iniciar un valor, es obligatorio poner comillas, de esta evitamos que Ansile crea que queremos iniciar un diccionario YAML (Visto anteriormente).
+
+En caso de no hacerlo, sacaría un error similar al siguiente:
+```diff
+- We could be wrong, but this one looks like it might be an issue with mising quotes.
+- Always quiote template expression brackets when they start a value.
+```
+> **Variables de Hosts y Variables de Grupos**: Estas variables pueden ser tanto de host como de grupo.
+
+Pra poder comprender las variables de host individual y las de grupo compartidas, usaremos los siguientes ejemplos:
+```yml
+#Variable individual
+[servidorEjemplo]
+192.168.1.10 usuario=usuario1 #Variable asignada a un solo equipo
+
+#Variable de grupo
+[servidoresEjemplo]
+192.168.1.[20:50] # Rango de IPs a las que se le asignaran la variable
+
+[servidoresEjemplo:vars] # Grupo que asigna las variables a servidoresEjemplo
+usuarioCompartido=usuarioComun
+```
+</details>
+
+<details>
+    <summary>Gestión de Secretos</summary>
+
+### Gestión de Secretos:
+
 </details>
