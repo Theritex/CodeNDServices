@@ -21,8 +21,3 @@
       command: ./install.sh
       args:
         chdir: "{{ user_home }}/ssp"
-
-    - name: Ejecutar un segundo comando
-      command: echo "Comando ejecutado"
-      args:
-        chdir: "{{ user_home }}/ssp"

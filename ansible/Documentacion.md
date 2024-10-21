@@ -5,7 +5,7 @@ EE eliminan complejidad a la hora de escalar proyectos automatizados y hacer las
 
 Se recomienda leer la [documentación](../mysql/Documentacion.md) de mysql para poder trabajar Ansible con bases de datos en MariaDB.
 
-# Instalación
+# Instalación Ansible
 
 Instalación en Ubuntu:
 ```sh

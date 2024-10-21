@@ -20,11 +20,13 @@ semaphore setup
 ```
 Durante la instalación, el equipo solicitará los siguientes datos:
 ```sh
+Contraseña MariaDB: ubuntu
+
 sudo semaphore setup \
     --host 127.0.0.1 \
     --port 3000 \
     --user root \
-    --pass 'yourpassword' \
+    --pass 'yourpassword' \ #semaphore
     --name semaphore \
     --admin admin \
     --email admin@example.com \
