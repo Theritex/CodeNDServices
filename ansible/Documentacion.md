@@ -5,7 +5,7 @@ EE eliminan complejidad a la hora de escalar proyectos automatizados y hacer las
 
 Se recomienda leer la [documentación](../mysql/Documentacion.md) de mysql para poder trabajar Ansible con bases de datos en MariaDB.
 
-# Instalación Ansible
+### Instalación Ansible
 
 Instalación en Ubuntu:
 ```sh
@@ -22,3 +22,25 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
 
 sudo apt update && sudo apt install ansible -y
 ```
+
+### Requisitos Conexión
+
+Es posible que a la hora de ejecutar un playbook:
+```sh
+ansible-playbook -i inventory.ini playbook.yml
+```
+De una salida de error de credenciales, esto significa que es necesario usar credenciales para acceder a otros equipos, para solucionar este problema, es necesario instalar `sshpass`:
+```sh
+sudo apt install sshpass
+```
+En el interior del fichero `inventory.ini` usaremos las credenciales para poder acceder a diferentes máquinas, de la siguiente forma:
+```ini
+# Interior inventory.ini
+[clientes]
+192.168.1.39 ansible_ssh_user=ubuntu ansible_ssh_pass=ubuntu
+```
+Para ejecutar el codigo usaremos el siguiente comando:
+```sh
+ansible-playbook -i inventory.ini playbook.yml --ask-become-pass
+```
+Esto permitirá el acceso por SSH a los equipos especificados dentro de `inventory.ini`.
