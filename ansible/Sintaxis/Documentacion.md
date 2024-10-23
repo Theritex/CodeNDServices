@@ -9,7 +9,7 @@
 ### Contenido y Estructura de los Inventarios:
 
 En el inventario, las direcciones los servidores pueden ser tanto por DNS como por Dirección IP, por ello es posible indicarlas de ambas formas.
-El nombre del grupo donde están esas direcciones agrupadas se encuentra entre "[]", lo que posteriormente podemos utilizar para llamar a esa agrupación de direcciones y asignarle un playbook.
+El nombre del grupo donde están esas direcciones agrupadas se encuentra entre "[ ]", lo que posteriormente podemos utilizar para llamar a esa agrupación de direcciones y asignarle un playbook.
 
 Los hosts pueden estar en diferentes grupos, segun el rol del host, su ubicación fisica, ya sea en producción o no y demás bariables, lo que permite aplicar dichas playbooks a conjuntos especificos del host en funcón de sus propóstos, características o ubicación fisica.
 ```ini

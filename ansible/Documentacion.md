@@ -9,8 +9,12 @@ Se recomienda leer la [documentación](../mysql/Documentacion.md) de mysql para 
 
 Instalación en Ubuntu:
 ```sh
-sudo apt update && sudo apt install ansible -y
+sudo apt update
 ```
+```sh
+sudo apt install ansible-core
+```
+
 Instalación en Debian:
 ```sh
 echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" | sudo tee /etc/apt/sources.list.d/ansible.list

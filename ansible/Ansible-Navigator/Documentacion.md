@@ -10,11 +10,11 @@ sudo apt update
 ```
 Es necesario contar con python para poder iniciar con la isntalación:
 ```sh
-sudo apt install python
+sudo apt install python3
 ```
 Instalamos pip:
 ```py
-sudo apt install python-pip
+sudo apt install python3-pip
 ```
 Instalamos las herramientas `setuptools`:
 ```py
