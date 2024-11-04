@@ -5,6 +5,15 @@ Semaphore es una interfaz web de código abierto que permite la gestion de Ansib
 Es posible instalar Semaphore de múltiples maneras, la que se usará en este ejemplo es la vista en [esta página](https://docs.semaphoreui.com/administration-guide/installation/#package-manager).
 
 ### Instalación:
+Antes de empezar se recomienda crear un usuario `semaphore` con el que se accedera al mismo cada vez que sea necesario.
+```sh
+sudo adduser --system --group --home /home/semaphore semaphore
+```
+Posteriormente actualizamos los paquetes del equipo:
+```sh
+sudo apt update
+```
+
 Usamos el siguiente comando para obtener el `.deb` del repositorio en GitHub:
 ```sh
 wget https://github.com/ansible-semaphore/semaphore/releases/\
