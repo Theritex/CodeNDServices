@@ -39,7 +39,7 @@ nombre="Mundo"
 echo "Hola, $nombre"
 
 # Uso de un condicional
-if [ $nombre == "Mundo" ]; then
+if [[ $nombre == "Mundo" ]]; then
   echo "Estás en el ejemplo correcto"
 fi
 
@@ -115,3 +115,37 @@ Se recomienda revisar [Linux Commands](https://github.com/Theritex/LinuxCommands
 - `find` [directorio] -name [nombre]: Busca archivos en un directorio.
 - `locate` [archivo]: Busca archivos en todo el sistema usando una base de datos.
 - `which` [comando]: Muestra la ruta completa de un comando.
+
+### Simplificación de código
+
+Podermos simplificar codigo a la par que evitamos problemas por sintaxis, esto es posible siempre que tengamos en cuenta la estructura y funcionamiento de cada caracter.
+
+**Condicionales IF, ELIF o ELSE**
+- Ejemplo Basico
+```sh
+if  [[ $var == true ]]; then
+  echo "La variable es true"
+else
+  echo "La variable es false"
+fi
+```
+- Ejemplo Simplificado:
+```sh
+[[ $var == "true" ]]; && echo "La variable es true" ||  echo "La variable es false"
+```
+De esta forma, no solo simplificamos el código haciendo que de la misma forma sea legible, sino que simplificamos lineas, las cuales harán que con menos lineas, podamos hacer funcionar el mismo codigo.
+
+**Comprobaciones TRUE / FALSE**
+- Ejemplo Basico
+```sh
+if [[ $var == true ]]; then
+   echo "var es $var" # true
+else
+  echo "var es $var" # false
+fi
+```
+- Ejemplo Simplificado
+```sh
+$var && echo "var es true" ||echo "var es false"
+```
+De esta forma comprobamos si $var es true o false simplificando el código para ocupar menos sin perder el funcionamiento.
