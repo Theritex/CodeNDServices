@@ -74,3 +74,7 @@ DROP USER 'nombre_usuario'@'host';
     - `DROP USER 'nombre_usuario'@'host';`
     - `DROP USER 'nombre_usuario'@'%';`
 - Para ver esto, listaremos los usuarios creados con: `SELECT User, Host FROM mysql.user;`
+
+Para eliminar una tabla, se usa `DROP` como se muestra a continuación:
+```sql
+DROP DATABASE nombre_base_datos;
