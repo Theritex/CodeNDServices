@@ -1,80 +1,217 @@
-# Documentación MySQL
+Apuntes Bases de Datos - Nisamov
 
-### Ejecuta Actualiaciones del Sistema
-Para ejecutar una instalación sin problemas, debemos actualizar el sistema.
+# Preparación del Sistema
+## Actualización del sistema operativo
+
+Antes de instalar servicios es necesario actualizar los repositorios:
 ```sh
 sudo apt update
 ```
-
-### Instalación Servidor MariaDB
-Para instalar MariaDB en Ubuntu, es necesario ejecutar los siguiente comandos:
+# Instalación de MariaDB
+## Instalación del servidor y cliente
 ```sh
 sudo apt install mariadb-server mariadb-client -y
 ```
-Para comprobar el estado del servicio de MariaDB:
+## Gestión del servicio
+Ver estado del servicio:
 ```sh
 sudo systemctl status mariadb.service
 ```
-- En caso de que mariadb.service no este en ejecución, usaremos el siguiente comando: `sudo systemctl start mariadb.service`
-- Si queremos detener el servicio mariadb.service, usaremos el siguiente comando: `sudo systemctl stop mariadb.service`
-
-Para establecer una clave de acceso en MariaDB, ejecutamos el siguiente comndo (`se recomienda usar una clave segura`):
+Iniciar servicio:
+```sh
+sudo systemctl start mariadb.service
+```
+Detener servicio:
+```sh
+sudo systemctl stop mariadb.service
+```
+## Configuración de seguridad inicial
 ```sh
 sudo mysql_secure_installation
 ```
-- Si usamos menos de 8 carácteres nos advertirá que es una clave insegura pero podremos proceder.
-- Si lo dejamos vacio y presionamos enter, lo tomará como que no se establece una clave e igualmente podemos proceder.
-- Se recomienda guardar la clave en un documento seguro o apuntada en un papel para no perder dicha clave.
-
-### Inicio y Uso de MariaDB
-Para iniciar MariaDB en la linea de comandos, usamos el siguiente comando:
-```sh
+Consideraciones:
+- Se admite establecer contraseñas de menos de 8 caracteres, aunque se considera inseguro.
+- Si la contraseña se deja vacía, el sistema lo acepta.
+- La contraseña debe almacenarse en un entorno seguro.
+# Acceso y Operaciones Básicas
+## Acceder al cliente MariaDB
+```sql
 mysql -u root -p
 ```
-
-Para crear una base de datos es necesario ejecutar el siguiente comando:
+# Gestión de Bases de Datos
+## Crear una base de datos
 ```sql
-CREATE DATABASE `bddname`; # Sustituimos 'bddname' por el nombre de nuestra base de datos
+CREATE DATABASE nombre_bd;
 ```
-Para crear un usuario con contraseña, ejecutamos el siguiente comando:
+## Seleccionar una base de datos
 ```sql
-CREATE USER 'usuario' IDENTIFIED BY 'clave'; # Creamos un usuario que tiene acceso a esta base, se cambia 'usuario' por el nombre deseado, asi mismo con 'clave', hacemos los mismo
+USE nombre_bd;
 ```
-Para otorgar permisos basicos de uso a dicho usuario, permitiendo la conexión con la base de datos, pero sin tener privilegios para hacer cambios:
+## Eliminar una base de datos
 ```sql
-GRANT USAGE ON *.* TO 'usuario'@localhost IDENTIFIED BY 'clave'; # Cambiamos los parametros por los que se necesiten
+DROP DATABASE nombre_bd;
 ```
-Si queremos otorgar todos los privilegios posibles sobre la base de datos creada, es necesario ejecutar este comando cambiando los parametros establecidos:
-```sql
-GRANT ALL PRIVILEGES ON `bddname`.* TO 'usuario'@localhost;
-```
-Mostrar qué privilegios tiene el usuario semaphore_user en las diferentes tablas de las bases de datos.
-```sql
-SELECT GRANTEE, TABLE_SCHEMA, TABLE_NAME, PRIVILEGE_TYPE FROM information_schema.table_privileges WHERE GRANTEE = "'semaphore_user'@'%'";
-```
-Para actualizar los privilegios y que surgan efecto, usamos el siguiente comando:
-```sql
-FLUSH PRIVILEGES;
-```
-Para ver todas las bases de datos creadas, ejecutamos el siguiente comando:
+## Listar bases de datos
 ```sql
 SHOW DATABASES;
 ```
-Para ver todos los usuarios creados, ejecutamos el siguiente comando:
+# Gestión de Usuarios y Permisos
+## Crear usuario
+```sql
+CREATE USER 'usuario' IDENTIFIED BY 'clave';
+```
+## Conceder permisos básicos
+```sql
+GRANT USAGE ON *.* TO 'usuario'@'localhost' IDENTIFIED BY 'clave';
+```
+## Conceder todos los privilegios sobre una base de datos
+```sql
+GRANT ALL PRIVILEGES ON nombre_bd.* TO 'usuario'@'localhost';
+```
+## Actualizar permisos
+```sql
+FLUSH PRIVILEGES;
+```
+## Listar usuarios
 ```sql
 SELECT User, Host FROM mysql.user;
 ```
-- Si tienes problemas para ver el usuario, ejecuta el siguiente comando: `SELECT User, Host FROM mysql.user WHERE User = 'usuario';`
-
-Para eliminar un usuario, usamos `DROP`siguiendo el siguiente comando:
+Listar un usuario específico:
+```sql
+SELECT User, Host FROM mysql.user WHERE User = 'usuario';
+```
+## Ver privilegios de un usuario
+```sql
+SELECT GRANTEE, TABLE_SCHEMA, TABLE_NAME, PRIVILEGE_TYPE
+FROM information_schema.table_privileges
+WHERE GRANTEE = "'nombre_usuario'@'%'";
+```
+## Eliminar un usuario
 ```sql
 DROP USER 'nombre_usuario'@'host';
 ```
-- Es necesario revisar el host con el que se ha creado, bien si es `localhost`, o `%`.
-    - `DROP USER 'nombre_usuario'@'host';`
-    - `DROP USER 'nombre_usuario'@'%';`
-- Para ver esto, listaremos los usuarios creados con: `SELECT User, Host FROM mysql.user;`
-
-Para eliminar una tabla, se usa `DROP` como se muestra a continuación:
+# Gestión de Tablas
+## Crear tablas
 ```sql
-DROP DATABASE nombre_base_datos;
+CREATE TABLE producto (
+    nombre VARCHAR(128) NOT NULL,
+    precio DECIMAL(8,2) NOT NULL,
+    stock INT NOT NULL,
+    id INT UNSIGNED NOT NULL,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE pe_incluye_prod (
+    id_pedido INT NOT NULL,
+    id_producto INT NOT NULL,
+    PRIMARY KEY (id_pedido, id_producto)
+);
+```
+## Mostrar tablas
+```sql
+SHOW TABLES IN nombre_bd;
+```
+## Información de columnas
+```sql
+DESCRIBE producto;
+```
+## Añadir una columna
+```sql
+ALTER TABLE producto ADD COLUMN cod_barras CHAR(13) NULL;
+```
+## Eliminar columna
+```sql
+ALTER TABLE producto DROP COLUMN cantidad;
+```
+## Renombrar columna
+```sql
+ALTER TABLE producto RENAME COLUMN stock TO cantidad;
+```
+## Modificar tipo de dato
+```sql
+ALTER TABLE producto MODIFY COLUMN cantidad DECIMAL(12,2) NOT NULL;
+```
+## Modificar tipo y nombre simultáneamente
+```sql
+ALTER TABLE producto CHANGE COLUMN cantidad stock DOUBLE NOT NULL;
+```
+## Renombrar tabla
+```sql
+ALTER TABLE producto RENAME TO productos;
+```
+## Mover tabla entre bases de datos
+```sql
+ALTER TABLE enciclopedia.productos
+RENAME TO tienda.producto;
+```
+## Eliminar tabla
+```sql
+DROP TABLE producto;
+```
+# Claves y Restricciones
+## Clave primaria
+Eliminar clave primaria:
+```sql
+ALTER TABLE producto DROP PRIMARY KEY;
+```
+Añadir clave primaria:
+```sql
+ALTER TABLE producto ADD PRIMARY KEY (nombre, precio);
+```
+Clave primaria múltiple:
+```sql
+PRIMARY KEY (campo1, campo2);
+```
+## Clave única (UNIQUE)
+```sql
+ALTER TABLE producto ADD CONSTRAINT u_nombre UNIQUE (nombre);
+```
+## Clave foránea
+```sql
+ALTER TABLE producto
+ADD CONSTRAINT fk_pp_pedido FOREIGN KEY (id_pedido) REFERENCES pedido(id);
+```
+## Eliminar una clave foránea
+```sql
+ALTER TABLE producto DROP FOREIGN KEY nombre_constraint;
+```
+Para conocer el nombre del constraint:
+```sql
+SHOW CREATE TABLE producto;
+```
+# Tipos de Datos en MariaDB
+## Tipos numéricos
+- Enteros (con opción UNSIGNED)
+- BIGINT (64 bits)
+- INT / INTEGER (32 bits)
+- SMALLINT (16 bits)
+- TINYINT (8 bits)
+- Decimales
+- Punto fijo:
+- DECIMAL(m, n)
+
+Ejemplo:
+- DECIMAL(12,3) → máximo 12 dígitos, 3 decimales.
+
+Punto flotante:
+- FLOAT (32 bits)
+- DOUBLE (64 bits)
+## Tipos de fecha y hora
+- DATE → YYYY-MM-DD
+- TIME → HH:MM:SS.fffff
+- DATETIME → YYYY-MM-DD HH:MM:SS.fffff
+## Tipos de texto
+- CHAR(n): longitud fija
+- VARCHAR(n): longitud variable (hasta n)
+- TEXT: hasta 65 535 caracteres
+## Tipos binarios
+- BLOB: hasta 65 535 bytes
+# Comandos de Consulta sobre Metadatos
+## Describir tabla
+```sql
+DESCRIBE nombre_bd.tabla;
+```
+## Mostrar definición completa de tabla
+```sql
+SHOW CREATE TABLE nombre_tabla;
+```
