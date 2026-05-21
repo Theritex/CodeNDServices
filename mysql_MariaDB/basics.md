@@ -53,15 +53,6 @@ SELECT id, AVG(id) FROM id GROUP BY id ORDER BY AVG(id) DESC;
 /*select autor, avg(precio) from libro group by autor order by avg(precio) desc;*/
 ```
 
-Por defecto MariaDB aplica una politica:
-ON DELETE NO ACTION y ON UPDATE NO ACTION
-
-- NO ACTION: No permite borrar la fila padre
-- SET NULL: Intenta poner valor null en la clave foranea
-- CASCADE: Elimina en cascada las filas que referencian a la eliminada
-- RESTRICT: Sinónimo de NO ACTION (Mismo comportamiento)
-- SET DEFAULT: Intentar poner valor por defecto en la columna
-
 ```sql
 UPDATE juego SET rating=0 WHERE rating IS NULL ON UPDATE NO ACTION;
 ```
